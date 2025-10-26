@@ -7,7 +7,7 @@ export default function LearnLayout({ children }: { children: ReactNode }) {
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Learning Session</h1>
         <p className="text-sm text-gray-500">
-          Next.js + MDX powered docs (next-docs-ui ready)
+          Next.js learning notes
         </p>
       </header>
       <main className="prose max-w-none prose-headings:scroll-mt-20">
@@ -16,4 +16,3 @@ export default function LearnLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
-

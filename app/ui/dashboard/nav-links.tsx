@@ -18,7 +18,6 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  // Simple link to docs/learning area (no icon change for brevity)
   { name: 'Learn', href: '/learn', icon: HomeIcon },
 ];
 

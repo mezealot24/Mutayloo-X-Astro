@@ -25,6 +25,7 @@
 ### 🤔 ทำไมต้องจัดโฟลเดอร์แบบนี้?
 
 เราจัด UI components ตาม **feature** (คุณสมบัติ) เพราะว่า:
+
 - ✅ หาไฟล์เจอง่าย (ทุกอย่างที่เกี่ยวกับ clients อยู่ที่เดียวกัน)
 - ✅ แก้ไขง่าย (ไม่ต้องกระโดดไฟล์ไกลๆ)
 - ✅ Re-use ได้ง่าย (แยกส่วนที่ใช้ร่วมกันออกมา)
@@ -82,12 +83,12 @@ c:\Projects\nextjs-dashboard\
 
 ### 📝 Naming Convention
 
-| สิ่งที่ตั้งชื่อ | รูปแบบ | ตัวอย่าง |
-|----------------|--------|----------|
-| **ชื่อไฟล์** | `kebab-case.tsx` | `client-form.tsx`, `general-info-section.tsx` |
-| **Component Name** | `PascalCase` | `ClientForm`, `GeneralInfoSection` |
-| **Function/Variable** | `camelCase` | `createClient`, `clientData` |
-| **Type/Interface** | `PascalCase` | `HoroscopeClient`, `ClientFormState` |
+| สิ่งที่ตั้งชื่อ       | รูปแบบ           | ตัวอย่าง                                      |
+| --------------------- | ---------------- | --------------------------------------------- |
+| **ชื่อไฟล์**          | `kebab-case.tsx` | `client-form.tsx`, `general-info-section.tsx` |
+| **Component Name**    | `PascalCase`     | `ClientForm`, `GeneralInfoSection`            |
+| **Function/Variable** | `camelCase`      | `createClient`, `clientData`                  |
+| **Type/Interface**    | `PascalCase`     | `HoroscopeClient`, `ClientFormState`          |
 
 💡 **Tip**: ชื่อไฟล์ต้องตรงกับชื่อ Component หลักในไฟล์นั้นๆ เช่น `client-form.tsx` ข้างในต้องมี `export default function ClientForm()`
 
@@ -100,13 +101,18 @@ c:\Projects\nextjs-dashboard\
 Next.js 16 ใช้ **Server Components** เป็นค่าเริ่มต้น (ทำงานที่เซิร์ฟเวอร์)
 
 #### เมื่อไหร่ใช้ Server Components (ค่าเริ่มต้น)
+
 - ✅ แค่แสดงผลข้อมูล (ไม่ต้องมี interaction)
 - ✅ Fetch ข้อมูลจาก Database
 - ✅ Layout, Static content
 
 ```tsx
 // ไม่ต้องใส่ "use client" = Server Component
-export default function ClientDetailHeader({ client }: { client: HoroscopeClient }) {
+export default function ClientDetailHeader({
+  client,
+}: {
+  client: HoroscopeClient;
+}) {
   return (
     <div>
       <h1>{client.name}</h1>
@@ -117,6 +123,7 @@ export default function ClientDetailHeader({ client }: { client: HoroscopeClient
 ```
 
 #### เมื่อไหร่ใช้ Client Components (ต้องใส่ "use client")
+
 - ✅ มี State (useState, useReducer)
 - ✅ มี Event Handlers (onClick, onChange)
 - ✅ มี Hooks (useEffect, useActionState)
@@ -130,11 +137,7 @@ import { useState } from 'react';
 export default function AstrologyTypeSelector() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
-  return (
-    <div>
-      {/* Interactive checkbox */}
-    </div>
-  );
+  return <div>{/* Interactive checkbox */}</div>;
 }
 ```
 
@@ -147,6 +150,7 @@ export default function AstrologyTypeSelector() {
 แนวคิด: **สร้าง Component เล็กๆ หลายตัว แล้วนำมาประกอบกันเป็น Component ใหญ่**
 
 #### ❌ ไม่ดี: Component ใหญ่ก้อนเดียว (Hard to maintain)
+
 ```tsx
 export default function ClientForm() {
   return (
@@ -162,15 +166,16 @@ export default function ClientForm() {
 ```
 
 #### ✅ ดี: แยกเป็นส่วนเล็กๆ (Easy to maintain)
+
 ```tsx
 export default function ClientForm() {
   return (
     <form>
-      <GeneralInfoSection />        {/* 50 บรรทัด */}
-      <AstrologyTypeSelector />     {/* 30 บรรทัด */}
-      <ThaiAstrologyPanel />        {/* 60 บรรทัด */}
-      <ChineseAstrologyPanel />     {/* 60 บรรทัด */}
-      <FormButtons />               {/* 20 บรรทัด */}
+      <GeneralInfoSection /> {/* 50 บรรทัด */}
+      <AstrologyTypeSelector /> {/* 30 บรรทัด */}
+      <ThaiAstrologyPanel /> {/* 60 บรรทัด */}
+      <ChineseAstrologyPanel /> {/* 60 บรรทัด */}
+      <FormButtons /> {/* 20 บรรทัด */}
     </form>
   );
 }
@@ -215,6 +220,7 @@ export default function ClientForm() {
 ```
 
 **Server Action** (ทำงานที่เซิร์ฟเวอร์):
+
 ```tsx
 'use server'; // 👈 บอกว่าเป็น Server-side code
 
@@ -235,7 +241,7 @@ export async function createClient(prevState: any, formData: FormData) {
   if (!validated.success) {
     return {
       errors: validated.error.flatten().fieldErrors,
-      message: 'กรอกข้อมูลไม่ครบ'
+      message: 'กรอกข้อมูลไม่ครบ',
     };
   }
 
@@ -254,6 +260,7 @@ export async function createClient(prevState: any, formData: FormData) {
 ### 🎯 การใช้ ShadCN Components อย่างถูกต้อง
 
 #### ✅ Pattern 1: Import แบบนี้
+
 ```tsx
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -261,6 +268,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 ```
 
 #### ✅ Pattern 2: ใช้พร้อม Tailwind classes
+
 ```tsx
 <Button variant="default" size="lg" className="w-full">
   บันทึก
@@ -273,6 +281,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 ```
 
 #### ✅ Pattern 3: Wrap ใน Component ของเรา (Recommended!)
+
 ```tsx
 // ✨ สร้าง wrapper ของเราเอง = ใช้ซ้ำได้ + customize ง่าย
 export function FormInput({
@@ -293,11 +302,7 @@ export function FormInput({
 }
 
 // ใช้งาน:
-<FormInput
-  label="ชื่อ"
-  name="name"
-  error={state.errors?.name?.[0]}
-/>
+<FormInput label="ชื่อ" name="name" error={state.errors?.name?.[0]} />;
 ```
 
 ---
@@ -305,6 +310,7 @@ export function FormInput({
 ### 📦 TypeScript Props Pattern
 
 #### Pattern 1: Props แบบ Object
+
 ```tsx
 interface ClientAvatarProps {
   name: string;
@@ -312,12 +318,17 @@ interface ClientAvatarProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function ClientAvatar({ name, imageUrl, size = 'md' }: ClientAvatarProps) {
+export function ClientAvatar({
+  name,
+  imageUrl,
+  size = 'md',
+}: ClientAvatarProps) {
   // ...
 }
 ```
 
 #### Pattern 2: Extend HTML Props (สำหรับ wrapper components)
+
 ```tsx
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -335,6 +346,7 @@ export function FormInput({ label, error, ...props }: FormInputProps) {
 ```
 
 #### Pattern 3: Children Props
+
 ```tsx
 interface CardSectionProps {
   title: string;
@@ -366,16 +378,14 @@ export default function MyForm() {
   // State จะ update ทุกครั้งที่ Server Action return
   const [state, formAction] = useActionState(myServerAction, {
     message: '',
-    errors: {}
+    errors: {},
   });
 
   return (
     <form action={formAction}>
       {/* แสดง message ถ้ามี */}
       {state.message && (
-        <div className="bg-green-100 p-3 rounded">
-          {state.message}
-        </div>
+        <div className="bg-green-100 p-3 rounded">{state.message}</div>
       )}
 
       {/* Input with error */}
@@ -398,7 +408,7 @@ export default function MyForm() {
 export function FormField({
   label,
   name,
-  error
+  error,
 }: {
   label: string;
   name: string;
@@ -416,11 +426,12 @@ export function FormField({
         className={error ? 'border-red-500' : ''}
       />
       <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-        {error && error.map((err) => (
-          <p key={err} className="text-red-500 text-sm mt-1">
-            {err}
-          </p>
-        ))}
+        {error &&
+          error.map(err => (
+            <p key={err} className="text-red-500 text-sm mt-1">
+              {err}
+            </p>
+          ))}
       </div>
     </div>
   );
@@ -450,7 +461,7 @@ export function SubmitButton({ children }: { children: React.ReactNode }) {
 <form action={formAction}>
   <input name="name" />
   <SubmitButton>บันทึก</SubmitButton>
-</form>
+</form>;
 ```
 
 ---
@@ -458,11 +469,13 @@ export function SubmitButton({ children }: { children: React.ReactNode }) {
 ## 4. Exercise 1: สร้าง Component ง่ายๆ
 
 ### 🎯 เป้าหมาย
+
 สร้าง `ClientAvatar` component สำหรับแสดงรูปหรือชื่อย่อของลูกค้า
 
 ### 📋 ขั้นตอน
 
 #### Step 1: สร้างไฟล์
+
 ```bash
 # สร้างไฟล์ที่ตำแหน่งนี้:
 c:\Projects\nextjs-dashboard\app\ui\clients\client-avatar.tsx
@@ -475,14 +488,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // 1. กำหนด Props ที่ Component นี้จะรับ
 interface ClientAvatarProps {
-  name: string;           // ชื่อลูกค้า (required)
-  imageUrl?: string;      // URL รูป (optional)
+  name: string; // ชื่อลูกค้า (required)
+  imageUrl?: string; // URL รูป (optional)
   size?: 'sm' | 'md' | 'lg'; // ขนาด (optional, default = 'md')
 }
 
 // 2. สร้าง Component
-export function ClientAvatar({ name, imageUrl, size = 'md' }: ClientAvatarProps) {
-
+export function ClientAvatar({
+  name,
+  imageUrl,
+  size = 'md',
+}: ClientAvatarProps) {
   // 3. คำนวณขนาดตาม size prop
   const sizeClasses = {
     sm: 'h-8 w-8 text-xs',
@@ -492,11 +508,11 @@ export function ClientAvatar({ name, imageUrl, size = 'md' }: ClientAvatarProps)
 
   // 4. สร้างชื่อย่อ (Initial) จาก 2 ตัวอักษรแรก
   const initials = name
-    .split(' ')                    // แยกคำด้วย space
-    .map(word => word[0])          // เอาตัวแรกของแต่ละคำ
-    .join('')                      // รวมกัน
-    .toUpperCase()                 // ทำเป็นตัวพิมพ์ใหญ่
-    .slice(0, 2);                  // เอาแค่ 2 ตัว
+    .split(' ') // แยกคำด้วย space
+    .map(word => word[0]) // เอาตัวแรกของแต่ละคำ
+    .join('') // รวมกัน
+    .toUpperCase() // ทำเป็นตัวพิมพ์ใหญ่
+    .slice(0, 2); // เอาแค่ 2 ตัว
 
   // 5. Render UI
   return (
@@ -544,6 +560,7 @@ export default function TestAvatarPage() {
 ```
 
 #### Step 4: ดูผลลัพธ์
+
 1. รัน dev server: `npm run dev` (ถ้ายังไม่รัน)
 2. เปิดเบราว์เซอร์: `http://localhost:3000/dashboard/clients/test-avatar`
 3. ควรเห็น Avatar 3 ขนาดและ Avatar ที่มีรูป
@@ -551,6 +568,7 @@ export default function TestAvatarPage() {
 ---
 
 ### ✅ เช็คลิสต์ความสำเร็จ
+
 - [ ] ไฟล์อยู่ที่ `app/ui/clients/client-avatar.tsx`
 - [ ] Component แสดงชื่อย่อได้ถูกต้อง
 - [ ] แสดงรูปได้ ถ้ามี imageUrl
@@ -564,11 +582,13 @@ export default function TestAvatarPage() {
 ## 5. Exercise 2: สร้าง Form Input Component
 
 ### 🎯 เป้าหมาย
+
 สร้าง `FormField` component ที่ wrap ShadCN Input พร้อม label และแสดง error
 
 ### 📋 ขั้นตอน
 
 #### Step 1: สร้างไฟล์
+
 ```bash
 c:\Projects\nextjs-dashboard\app\ui\clients\form-field.tsx
 ```
@@ -581,10 +601,10 @@ import { Label } from '@/components/ui/label';
 
 // 1. Props Interface
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;              // ข้อความ Label
-  name: string;               // ชื่อ field (จะใช้ใน FormData)
-  error?: string[];           // Array ของ error messages
-  description?: string;       // คำอธิบายเพิ่มเติม (optional)
+  label: string; // ข้อความ Label
+  name: string; // ชื่อ field (จะใช้ใน FormData)
+  error?: string[]; // Array ของ error messages
+  description?: string; // คำอธิบายเพิ่มเติม (optional)
 }
 
 // 2. Component
@@ -624,12 +644,16 @@ export function FormField({
 
       {/* 6. Error Messages */}
       <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-        {error && error.map((err, index) => (
-          <p key={index} className="text-red-500 text-sm mt-1 flex items-center gap-1">
-            <span>⚠️</span>
-            <span>{err}</span>
-          </p>
-        ))}
+        {error &&
+          error.map((err, index) => (
+            <p
+              key={index}
+              className="text-red-500 text-sm mt-1 flex items-center gap-1"
+            >
+              <span>⚠️</span>
+              <span>{err}</span>
+            </p>
+          ))}
       </div>
     </div>
   );
@@ -644,7 +668,8 @@ export function FormField({
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
-interface FormTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface FormTextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   name: string;
   error?: string[];
@@ -680,7 +705,9 @@ export function FormTextarea({
 
       <div id={`${name}-error`} aria-live="polite">
         {error?.map((err, i) => (
-          <p key={i} className="text-red-500 text-sm mt-1">⚠️ {err}</p>
+          <p key={i} className="text-red-500 text-sm mt-1">
+            ⚠️ {err}
+          </p>
         ))}
       </div>
     </div>
@@ -755,6 +782,7 @@ export default function TestFormFieldsPage() {
 ```
 
 #### Step 5: ดูผลลัพธ์
+
 1. เปิดเบราว์เซอร์: `http://localhost:3000/dashboard/clients/test-form-fields`
 2. ทดสอบดูแต่ละ input field
 3. สังเกตว่า error แสดงผลถูกต้อง
@@ -762,6 +790,7 @@ export default function TestFormFieldsPage() {
 ---
 
 ### ✅ เช็คลิสต์ความสำเร็จ
+
 - [ ] สร้าง `form-field.tsx` สำเร็จ
 - [ ] แสดง label ได้
 - [ ] แสดง description ได้
@@ -777,11 +806,13 @@ export default function TestFormFieldsPage() {
 ## 6. Exercise 3: สร้าง General Info Section
 
 ### 🎯 เป้าหมาย
+
 สร้างส่วน "ข้อมูลทั่วไป" สำหรับ Client Form โดยใช้ Components ที่สร้างไว้
 
 ### 📋 ขั้นตอน
 
 #### Step 1: สร้างไฟล์
+
 ```bash
 c:\Projects\nextjs-dashboard\app\ui\clients\general-info-section.tsx
 ```
@@ -795,7 +826,13 @@ import { FormField } from './form-field';
 import { FormTextarea } from './form-textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 // 1. Props Interface
 interface GeneralInfoSectionProps {
@@ -950,11 +987,9 @@ export function ContactInfoSection({ errors }: ContactInfoSectionProps) {
         {/* Privacy Toggle */}
         <div className="flex items-center space-x-2 p-3 bg-amber-50 rounded-lg">
           <Checkbox id="is_public" name="is_public" />
-          <Label
-            htmlFor="is_public"
-            className="text-sm cursor-pointer"
-          >
-            ทำให้ข้อมูลนี้เป็น <strong>สาธารณะ</strong> (โหราจารย์คนอื่นมองเห็นได้)
+          <Label htmlFor="is_public" className="text-sm cursor-pointer">
+            ทำให้ข้อมูลนี้เป็น <strong>สาธารณะ</strong>{' '}
+            (โหราจารย์คนอื่นมองเห็นได้)
           </Label>
         </div>
 
@@ -990,12 +1025,16 @@ export function ClientForm() {
     <form action={formAction} className="max-w-4xl mx-auto">
       {/* แสดง Success/Error Message */}
       {state.message && (
-        <div className={`
+        <div
+          className={`
           p-4 rounded-lg mb-6
-          ${state.errors && Object.keys(state.errors).length > 0
-            ? 'bg-red-50 text-red-700 border border-red-200'
-            : 'bg-green-50 text-green-700 border border-green-200'}
-        `}>
+          ${
+            state.errors && Object.keys(state.errors).length > 0
+              ? 'bg-red-50 text-red-700 border border-red-200'
+              : 'bg-green-50 text-green-700 border border-green-200'
+          }
+        `}
+        >
           {state.message}
         </div>
       )}
@@ -1011,9 +1050,7 @@ export function ClientForm() {
             ยกเลิก
           </Button>
         </Link>
-        <Button type="submit">
-          บันทึกข้อมูล
-        </Button>
+        <Button type="submit">บันทึกข้อมูล</Button>
       </div>
     </form>
   );
@@ -1072,7 +1109,10 @@ export type State = {
   message?: string;
 };
 
-export async function createClient(prevState: State, formData: FormData): Promise<State> {
+export async function createClient(
+  prevState: State,
+  formData: FormData
+): Promise<State> {
   // 1. Validate
   const validatedFields = ClientSchema.safeParse({
     name: formData.get('name'),
@@ -1107,6 +1147,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ```
 
 #### Step 7: ทดสอบ
+
 1. เปิด `http://localhost:3000/dashboard/clients/create`
 2. ลองกรอกข้อมูล
 3. ลองกดบันทึกโดยไม่กรอกชื่อ (ควรเห็น error)
@@ -1115,6 +1156,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ---
 
 ### ✅ เช็คลิสต์ความสำเร็จ
+
 - [ ] สร้าง `general-info-section.tsx` สำเร็จ
 - [ ] สร้าง `contact-info-section.tsx` สำเร็จ
 - [ ] สร้าง `client-form.tsx` สำเร็จ
@@ -1133,6 +1175,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ### 📂 เมื่อไหร่ควรใส่ไฟล์ที่ไหน?
 
 #### ✅ `app/ui/clients/` - Components เฉพาะสำหรับ Clients feature
+
 - `client-form.tsx` - Form components
 - `general-info-section.tsx` - Form sections
 - `client-avatar.tsx` - Client-specific display components
@@ -1140,12 +1183,14 @@ export async function createClient(prevState: State, formData: FormData): Promis
 - `form-field.tsx` - Reusable form inputs
 
 #### ✅ `app/ui/shared/` - Components ที่ใช้ได้หลาย features
+
 - `loading-spinner.tsx` - Loading states
 - `error-message.tsx` - Error displays
 - `empty-state.tsx` - When no data
 - `permission-badge.tsx` - ใช้ได้ทั้ง clients และ tarot
 
 #### ✅ `app/lib/` - Logic, Data, Actions
+
 - `definitions.ts` - Types (general)
 - `definitions-crm.ts` - Types (CRM-specific)
 - `actions-clients.ts` - Server actions for clients
@@ -1153,6 +1198,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 - `utils.ts` - Helper functions
 
 #### ✅ `app/dashboard/clients/` - Pages (Routes)
+
 - `page.tsx` - List page
 - `create/page.tsx` - Create form page
 - `[id]/page.tsx` - Detail page
@@ -1162,6 +1208,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ### 🚫 Common Mistakes (ผิดพลาดบ่อย)
 
 #### Mistake 1: ใส่ Component ในโฟลเดอร์ผิด
+
 ```
 ❌ app/ui/form-field.tsx          (เฉพาะเจาะจงเกินไป)
 ✅ app/ui/clients/form-field.tsx  (ชัดเจนว่าเป็นของ clients)
@@ -1171,6 +1218,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ```
 
 #### Mistake 2: Import path ผิด
+
 ```tsx
 ❌ import { Button } from '../components/ui/button';
 ✅ import { Button } from '@/components/ui/button';
@@ -1180,6 +1228,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ```
 
 #### Mistake 3: ตั้งชื่อไฟล์ไม่ตรงกับ Component
+
 ```tsx
 ❌ ไฟล์: client-info.tsx → Component: export default function GeneralInfo()
 ✅ ไฟล์: general-info.tsx → Component: export default function GeneralInfo()
@@ -1192,11 +1241,13 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ### 🎯 สิ่งที่ควรทำต่อไป (เรียงตามลำดับ)
 
 #### 1. เพิ่ม Astrology Type Selector (10-15 นาที)
+
 - [ ] สร้าง `astrology-type-selector.tsx`
 - [ ] ใช้ Checkbox group สำหรับเลือก Thai/Chinese/Vedic/Western/Tarot
 - [ ] เก็บ state ของ types ที่เลือก
 
 #### 2. สร้าง Dynamic Panels (30-45 นาที แต่ละ panel)
+
 - [ ] `thai-astrology-panel.tsx`
 - [ ] `chinese-astrology-panel.tsx`
 - [ ] `vedic-western-panel.tsx`
@@ -1204,17 +1255,20 @@ export async function createClient(prevState: State, formData: FormData): Promis
 - [ ] แต่ละ panel แสดงก็ต่อเมื่อเลือก type นั้นๆ
 
 #### 3. เชื่อมต่อ Database จริง (1-2 ชั่วโมง)
+
 - [ ] แก้ไข `actions-clients.ts` ให้ INSERT ข้อมูลจริง
 - [ ] ใช้ `@vercel/postgres` หรือ Supabase client
 - [ ] ทดสอบบันทึกข้อมูลจริง
 
 #### 4. สร้าง Clients List Page (1-2 ชั่วโมง)
+
 - [ ] สร้าง `app/dashboard/clients/page.tsx`
 - [ ] สร้าง `clients-table.tsx`
 - [ ] สร้าง `client-search.tsx`
 - [ ] เพิ่ม Pagination
 
 #### 5. สร้าง Client Detail Page (2-3 ชั่วโมง)
+
 - [ ] สร้าง `app/dashboard/clients/[id]/page.tsx`
 - [ ] แสดงข้อมูลทั้งหมด
 - [ ] สร้าง Tab navigation
@@ -1225,16 +1279,19 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ### 📚 เอกสารอ้างอิง
 
 #### Next.js 16
+
 - [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 - [useActionState Hook](https://react.dev/reference/react/useActionState)
 - [Forms and Mutations](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 
 #### ShadCN UI
+
 - [Documentation](https://ui.shadcn.com/)
 - [Components Gallery](https://ui.shadcn.com/docs/components/button)
 - [Form Example](https://ui.shadcn.com/docs/components/form)
 
 #### TypeScript
+
 - [React TypeScript Cheatsheet](https://react-typescript-cheatsheet.netlify.app/)
 
 ---
@@ -1242,6 +1299,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ### 💡 เคล็ดลับสำหรับ Q
 
 #### เมื่อติดปัญหา:
+
 1. **อ่าน Error Message ให้ดี** - มักจะบอกว่าปัญหาอยู่ตรงไหน
 2. **ตรวจสอบ Import Paths** - ใช้ `@/` prefix เสมอ
 3. **ลองแยกปัญหาออกมา** - สร้าง test page ทดสอบเฉพาะส่วนที่สงสัย
@@ -1249,6 +1307,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 5. **ดู Network Tab** - ดูว่า API/Action ส่งอะไรไป-กลับ
 
 #### Workflow ที่ดี:
+
 1. **เขียน Types ก่อน** (ใน `definitions.ts`)
 2. **สร้าง Component เล็กๆ** (เช่น `FormField`)
 3. **ประกอบเป็น Component ใหญ่** (เช่น `GeneralInfoSection`)
@@ -1260,6 +1319,7 @@ export async function createClient(prevState: State, formData: FormData): Promis
 ## 🎉 สรุป
 
 คุณได้เรียนรู้:
+
 - ✅ โครงสร้างโฟลเดอร์แบบ feature-based
 - ✅ Server Components vs Client Components
 - ✅ Composition Pattern (สร้างเล็ก ประกอบเป็นใหญ่)
